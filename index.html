@@ -3,102 +3,15 @@
     <head>
         <title>Edit Voxel.js Game</title>
         <meta http-equiv="content-type" content="text/html; charset=ISO-8859-1">
-        <script type="text/javascript" src="bundle.js"></script>
-        <script type="text/javascript">
-            var createGame = require('voxel-engine');
-            var createPlayer = require('voxel-player');
-            var game;
-            var players = []
-
-            function loadGame(){
-
-                if(game)
-                    return;
-
-                game = createGame({
-	                texturePath: 'textures/',
-	                generate: function(x,y,z){
-                        if (z*z + x*x > 20*20)
-                            return 0;
-                        if (y == -1)
-                            return 1;
-                        if (y < -1 && y >= -10)
-                            return 3;
-		                return 0;
-	                }
-                });
-                var container = document.body;
-                game.appendTo(container);
-                createPlayer = createPlayer(game);
-            }
-
-            function createNewPlayer(){
-                var player = createPlayer('player.png');
-                player.yaw.position.set(0,6,0);
-                player.possess();
-                players.push(player);
-
-                var option = document.createElement("option");
-                option.setAttribute("value", players.length-1);
-                option.appendChild(document.createTextNode("Player"+(players.length-1)));
-                var selectPlayer = document.getElementById("selectPlayer");
-                selectPlayer.appendChild(option);
-                selectPlayer.selectedIndex = players.length-1;
-            }
-
-            function controlPlayer(index){
-                if (players.length <= index)
-                    return;
-                var player = players[index];
-                game.controls.target(player);
-                player.possess();
-            }
-
-            function buildTower(){
-                var tower_button = document.getElementById("tower");
-                tower_button.setAttribute("disabled","");
-
-                var i = 0;
-                var buildInterval = window.setInterval(
-                    function(){
-                        if (i < 5){
-                            game.setBlock([0,i++,0], 3);
-                        } else {
-                            clearInterval(buildInterval);
-                            game.setBlock([0,5,0], 1);
-                            tower_button.setAttribute("value","Turm wegnehmen");
-                            tower_button.setAttribute("onClick", "clearTower();");
-                            tower_button.attributes.removeNamedItem("disabled");
-                        }
-                    }, 2500);
-            }
-
-            function clearTower(){
-                var tower_button = document.getElementById("tower");
-                tower_button.setAttribute("disabled", "");
-
-                var i = 5;
-                var removeInterval = window.setInterval(
-                    function(){
-                        if (i >= 0){
-                            game.setBlock([0,i--,0], 0);
-                        } else {
-                            clearInterval(removeInterval);
-                            tower_button.setAttribute("value","Turm bauen");
-                            tower_button.setAttribute("onClick", "buildTower();");
-                            tower_button.attributes.removeNamedItem("disabled");
-                        }
-                    }, 2500);
-            }
-        </script>
     </head>
-	<body onload="loadGame()">
-        <div id="controls" style="position: absolute; bottom: 0px; left: 400px">
-            <label for="selectPlayer">Spieler auswÃ¤hlen</label>
-            <select id="selectPlayer" size="3" onchange="controlPlayer(this.selectedIndex)"></select>
-            <input type="button" value="neuen Spieler erzeugen" onClick="createNewPlayer()">
-            <input type="button" id="tower" value="Turm bauen" onClick="buildTower();">
-        </div>
+	<body>
+        Grundsätzlich gibt es zwei Wege die Voxel über die Browserkonsole zu steuern
+		<ul>
+			<li>Die Variable, welche das Spiel hält als Global zu definieren. Beispiel
+			siehe <a href="globalVariable.html">hier</a>.</li>
+			<li>Browserify benutzen, um nur die Ressourcen zu bündeln und diese erst 
+			im Browser abrufen. Beispiel siehe <a href="sourcebundle.html">hier</a>.</li>
+		</ul>
 	</body>
 </html>
 
